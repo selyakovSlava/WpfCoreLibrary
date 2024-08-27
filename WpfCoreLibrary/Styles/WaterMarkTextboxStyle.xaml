@@ -1,0 +1,126 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:WpfCoreLibrary.Styles">
+    <!-- Colors. -->
+    <SolidColorBrush x:Key="BorderBackground" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="WatermarkTextForeground" Color="DarkSlateGray" />
+    <SolidColorBrush x:Key="ButtonClearBorderBrushIsMouseOver" Color="Black" />
+    <SolidColorBrush x:Key="ButtonClearBorderBrushIsMouseLeave" Color="Transparent" />
+    <SolidColorBrush x:Key="ButtonClearBorderBrushIsPressed" Color="Gray" />
+    <SolidColorBrush x:Key="ControlBorderBrushIsFocused" Color="Blue" />
+    <SolidColorBrush x:Key="ControlBorderBrushIsUnfocused" Color="#888888" />
+
+    <!-- Corener radius. -->
+    <CornerRadius x:Key="BorderCornerRadius">2</CornerRadius>
+
+    <!-- Thickness. -->
+    <Thickness x:Key="BorderThickness">1</Thickness>
+
+    <!-- Paddings. -->
+    <Thickness x:Key="BorderPadding">2</Thickness>
+
+    <!-- Fonts. -->
+    <FontStyle x:Key="WatermarkTextFontStyle" >Italic</FontStyle>
+
+    <!-- Backgrounds. -->
+    <ImageBrush x:Key="ButtonClearBackgroundImage" ImageSource="pack://application:,,,/WpfCoreLibrary;component/Resources/Editclear.png" />
+
+    <!-- Style for clear button. -->
+    <Style x:Key="ClearButtonStyle" TargetType="{x:Type Button}">
+        <Style.Resources>
+            <system:Double x:Key="IsMouseOverButtonClearOpacity" >1</system:Double>
+            <system:Double x:Key="IsNotMouseOverButtonClearOpacity" >0.5</system:Double>
+        </Style.Resources>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="{StaticResource IsMouseOverButtonClearOpacity}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="False">
+                <Setter Property="Opacity" Value="{StaticResource IsNotMouseOverButtonClearOpacity}" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Width" Value="23" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1" ScaleX="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Name="border"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                CornerRadius="3"
+                                Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource ButtonClearBorderBrushIsMouseOver}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="BorderBrush" Value="{StaticResource ButtonClearBorderBrushIsMouseLeave}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.25" />
+                            <Setter Property="BorderBrush" Value="{StaticResource ButtonClearBorderBrushIsMouseLeave}" />
+                        </Trigger>
+                        <Trigger Property="Button.IsPressed" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ButtonClearBorderBrushIsPressed}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- Control template for text box. -->
+    <ControlTemplate TargetType="{x:Type TextBox}" x:Key="WaterMarkTextBoxTemplate">
+        <Border x:Name="Border" 
+                    CornerRadius="{StaticResource BorderCornerRadius}" 
+                    Padding="{StaticResource BorderPadding}" 
+                    Background="{StaticResource BorderBackground}" 
+                    BorderThickness="{StaticResource BorderThickness}">
+            <Grid>
+                <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+
+                <TextBlock x:Name="WaterMarkText" Margin="5,0,0,0" Visibility="Hidden" IsHitTestVisible="False" VerticalAlignment="Center" 
+                               FontStyle="{StaticResource WatermarkTextFontStyle}"
+                               Foreground="{StaticResource WatermarkTextForeground}" 
+                               Text="поиск ..."/>
+
+                <Button x:Name="ClearTextButton" Height="18" Width="18" Padding="0" Margin="0" BorderThickness="0" HorizontalAlignment="Right" 
+                        Visibility="Visible"
+                        ToolTip="Очистить" 
+                        Background="{StaticResource ButtonClearBackgroundImage}" 
+                        Style="{StaticResource ClearButtonStyle}">
+                </Button>
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ControlBorderBrushIsFocused}"/>
+            </Trigger>
+            <Trigger Property="IsFocused" Value="False">
+                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ControlBorderBrushIsUnfocused}"/>
+            </Trigger>
+
+            <Trigger Property="Text" Value="">
+                <Setter Property="Visibility" TargetName="WaterMarkText" Value="Visible" />
+                <Setter Property="Visibility" TargetName="ClearTextButton" Value="Hidden" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>
